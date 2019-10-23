@@ -24,6 +24,8 @@ For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  :
     -rw-r--r--  1 andrii  staff  1945 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.cert.pem
     -rw-r--r--  1 andrii  staff  1676 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.key.pem
     ```
+    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format.
+
 - Add proper domain record with the tools of your choice for your DNS provider pointin to IP-addres `192.168.56.22`. In this case - GoDaddy, via Web-console. Checking result :
     ```bash
     $ dig ANY ptfe-vagrant.guselietov.com
@@ -62,7 +64,6 @@ For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  :
 
 
 # TODO
-- [ ] prepare vagrant vm
 - [ ] prepare step-by step instructions for installation part
 - [ ] update README
 
@@ -71,3 +72,4 @@ For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  :
 - [x] create domain entry
 - [x] register certificate
 - [x] update readme
+- [x] prepare vagrant vm
