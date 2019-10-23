@@ -247,9 +247,138 @@ press **[save]** button to save all you settings. And you going to be present wi
 - Create workspace
 - Create token
 - Add token to config or env var
-- Create test TF code
+- Create test TF code :
+    ```terraform
+    terraform {
+        backend "remote" {
+            hostname     = "ptfe-vagrant.guselietov.com"
+            organization = "acme"
+
+            workspaces {
+            name = "playground"
+            }
+        }
+    }
+
+    resource "null_resource" "helloPTFE" {
+        provisioner "local-exec" {
+            command = "echo hello world in PTFE"
+        }
+    }
+    ```
+- Import certificate into system ( example for MacOs ) using bundle :
+    - run 'Keychain Access" application
+    - switch to the keychain **"System"**
+    - drag-and-drop your certificate bundle (system can ask you tp confirm your account password) : 
+    Check how this can look at teh screenshot : 
+    ![Installed cert](screenshots/macos_mojave_cert_install.png)
+    - now - open the imported certificate in System keychain. 
+    - Open **Trust** drop-down section
+    - Ensure taht nexst to the "When using this certificate" you have selected from menu **"Always Trust"**
+      See attached screenshot :  ![Cert settings](screenshots/macos_mojave_cert_settings.png)
+
 - Init backend
-- Apply
+    ```bash
+    terraform init
+
+    Initializing the backend...
+
+    Successfully configured the backend "remote"! Terraform will automatically
+    use this backend unless the backend configuration changes.
+
+    Initializing provider plugins...
+    - Checking for available provider plugins...
+    - Downloading plugin for provider "null" (hashicorp/null) 2.1.2...
+
+    The following providers do not have any version constraints in configuration,
+    so the latest version was installed.
+
+    To prevent automatic upgrades to new major versions that may contain breaking
+    changes, it is recommended to add version = "..." constraints to the
+    corresponding provider blocks in configuration, with the constraint strings
+    suggested below.
+
+    * provider.null: version = "~> 2.1"
+
+    Terraform has been successfully initialized!
+
+    You may now begin working with Terraform. Try running "terraform plan" to see
+    any changes that are required for your infrastructure. All Terraform commands
+    should now work.
+
+    If you ever set or change modules or backend configuration for Terraform,
+    rerun this command to reinitialize your working directory. If you forget, other
+    commands will detect it and remind you to do so if necessary.
+    ```
+    > Note : Successfully configured the backend "remote"! Terraform will automatically
+    >        use this backend unless the backend configuration changes
+    > E.g. we using our new PTFE installation now
+- Apply code : 
+    ```
+    Running apply in the remote backend. Output will stream here. Pressing Ctrl-C
+    will cancel the remote apply if it's still pending. If the apply started it
+    will stop streaming the logs, but will not stop the apply running remotely.
+
+    Preparing the remote apply...
+
+    To view this run in a browser, visit:
+    https://ptfe-vagrant.guselietov.com/app/acme/playground/runs/run-wD7uVEzqMEQFCQLo
+
+    Waiting for the plan to start...
+
+    Terraform v0.12.2
+
+    Configuring remote state backend...
+    Initializing Terraform configuration...
+    2019/10/23 15:10:47 [DEBUG] Using modified User-Agent: Terraform/0.12.2 TFE/ad6f6a1d83
+    Refreshing Terraform state in-memory prior to plan...
+    The refreshed state will be used to calculate this plan, but will not be
+    persisted to local or remote state storage.
+
+
+    ------------------------------------------------------------------------
+
+    An execution plan has been generated and is shown below.
+    Resource actions are indicated with the following symbols:
+    + create
+
+    Terraform will perform the following actions:
+
+    # null_resource.helloPTFE will be created
+    + resource "null_resource" "helloPTFE" {
+        + id = (known after apply)
+        }
+
+    Plan: 1 to add, 0 to change, 0 to destroy.
+
+    Do you want to perform these actions in workspace "playground"?
+    Terraform will perform the actions described above.
+    Only 'yes' will be accepted to approve.
+
+    Enter a value: yes
+
+    2019/10/23 15:11:10 [DEBUG] Using modified User-Agent: Terraform/0.12.2 TFE/ad6f6a1d83
+    null_resource.helloPTFE: Creating...
+    null_resource.helloPTFE: Provisioning with 'local-exec'...
+    null_resource.helloPTFE (local-exec): Executing: ["/bin/sh" "-c" "echo hello world in PTFE"]
+    null_resource.helloPTFE (local-exec): hello world in PTFE
+    null_resource.helloPTFE: Creation complete after 0s [id=4952050570687391712]
+
+    Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+    ```
+    E.g. our fresh PTFE installation with valid SSL certificate works as expected. 
+    On the screenshot below you can see the satte both in WebUI (at the e;lft) and CLI (at teh right side) : 
+    ![TF apply](screenshots/ptfe_apply_remoet_web_and_cli.png)
+- Now you can destroy the virtual machine and free up resources by executing : 
+```
+$ vagrant destroy
+    default: Are you sure you want to destroy the 'default' VM? [y/N] y
+==> default: Forcing shutdown of VM...
+==> default: Destroying VM and associated drives...
+```
+and confirming by pressing `y`
+
+
 
 
 # Technologies
@@ -263,8 +392,7 @@ press **[save]** button to save all you settings. And you going to be present wi
 
 
 # TODO
-- [ ] prepare step-by step instructions for installation part
-- [ ] update README
+- [ ] update README for CERT bundle part
 
 # DONE
 - [x] export GoDaddy keys/challenge responce
@@ -272,3 +400,4 @@ press **[save]** button to save all you settings. And you going to be present wi
 - [x] register certificate
 - [x] update readme
 - [x] prepare vagrant vm
+- [x] prepare step-by step instructions for installation part
