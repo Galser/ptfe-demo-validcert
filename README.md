@@ -7,9 +7,10 @@ Install PTFE on Demo version with Valid Certificate in Vagrantr environment, thi
 # Requirements
 
 TFE Overview : https://www.terraform.io/docs/enterprise/index.html
+
 Pre-Install checklist : https://www.terraform.io/docs/enterprise/before-installing/index.html
 
-This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use Vagrant with VirtualBox and KitchenCI.
+This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use Vagrant with VirtualBox.
 
 To learn more about the mentioned above tools and technologies -  please check section [Technologies near the end of the README](#technologies)
 
@@ -24,9 +25,9 @@ For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  :
     -rw-r--r--  1 andrii  staff  1945 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.cert.pem
     -rw-r--r--  1 andrii  staff  1676 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.key.pem
     ```
-    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format.
+    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format. Please prepare such file, you going to need it to test your installation later.
 
-- Add proper domain record with the tools of your choice for your DNS provider pointin to IP-addres `192.168.56.22`. In this case - GoDaddy, via Web-console. Checking result :
+- Add proper domain record (type "A") with the tools of your choice for your DNS provider pointing to IP-addres `192.168.56.22` for the host `ptfe-vagrant.guselietov.com . In this case - GoDaddy, via Web-console. Checking result :
     ```bash
     $ dig ANY ptfe-vagrant.guselietov.com
 
