@@ -15,6 +15,42 @@ To learn more about the mentioned above tools and technologies -  please check s
 
 # How-to
 
+- Prepare certificate -> The installer allows for using a certificate signed by a public or private CA. If you do not use a trusted certificate, your VCS provider will likely reject that certificate when sending webhooks. The key and X.509 certificate should **both be PEM (base64) encoded**.
+> Note : Never save your certificate and private key in VCS (GitHUb or any other).
+> Use any method to create certificates for appropriate name and prepare them soewhere in a sae private place, outside your VCS-controlled folders.
+For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  : 
+    ```bash
+    ls -l ~/Certs/ptfe-vagrant.guselietov.com*
+    -rw-r--r--  1 andrii  staff  1945 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.cert.pem
+    -rw-r--r--  1 andrii  staff  1676 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.key.pem
+    ```
+- Add proper domain record with the tools of your choice for your DNS provider pointin to IP-addres `192.168.56.22`. In this case - GoDaddy, via Web-console. Checking result :
+    ```bash
+    $ dig ANY ptfe-vagrant.guselietov.com
+
+    ; <<>> DiG 9.10.6 <<>> ANY ptfe-vagrant.guselietov.com
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18697
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ;; QUESTION SECTION:
+    ;ptfe-vagrant.guselietov.com.	IN	ANY
+
+    ;; ANSWER SECTION:
+    ptfe-vagrant.guselietov.com. 3600 IN	A	192.168.56.22
+
+    ;; Query time: 22 msec
+    ;; SERVER: 192.168.2.254#53(192.168.2.254)
+    ;; WHEN: Wed Oct 23 13:54:18 CEST 2019
+    ;; MSG SIZE  rcvd: 72
+
+    ```
+- 
+
+
 # Technologies
 
 1. **To download the content of this repository** you will need **git command-line tools**(recommended) or **Git UI Client**. To install official command-line Git tools please [find here instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for various operating systems. 
@@ -26,12 +62,12 @@ To learn more about the mentioned above tools and technologies -  please check s
 
 
 # TODO
-- [ ] export GoDaddy keys/challenge responce
-- [ ] create domain entry
-- [ ] register certificate
-- [ ] update readme
 - [ ] prepare vagrant vm
 - [ ] prepare step-by step instructions for installation part
 - [ ] update README
 
 # DONE
+- [x] export GoDaddy keys/challenge responce
+- [x] create domain entry
+- [x] register certificate
+- [x] update readme
