@@ -1,0 +1,46 @@
+Preflight Checks
+Successful HTTP request
+Can access api.replicated.com
+OS linux is supported
+The operating system must be linux
+Kernel version requirement met
+Kernel version must be at least 3.10
+Successful TLS connection
+Can connect to TLS 192.168.56.22 address
+Total space requirement met for directory /tmp
+Directory must have at least 1G total space
+Total space requirement met for directory /var/lib/replicated
+Directory must have at least 250M total space
+Docker server version requirement met
+Docker server version must be at least 1.7.1 and no greater than 18.09.2
+CPU cores requirement met
+Server must have at least 2 CPU cores
+Memory requirement met
+Server must have at least 4G total memory
+Total space requirement met for directory /
+Directory must have at least 10G total space
+Total space requirement met for directory /var/lib/docker
+Directory must have at least 40G total space
+Successful Docker registry ping
+Can access registry registry.replicated.com
+Successful Docker registry ping
+Can access registry index.docker.io
+Successful connection to releases.hashicorp.com:443.
+Can connect to releases.hashicorp.com:443.
+Node: f2e26f9100064b3547faf4f2e05c74ae
+OS linux is supported
+The operating system must be linux
+Kernel version requirement met
+Kernel version must be at least 3.10
+Successful TLS connection
+Can connect to TLS 192.168.56.22 address
+Docker server version requirement met
+Docker server version must be at least 1.7.1 and no greater than 18.09.2
+CPU cores requirement met
+Server must have at least 2 CPU cores
+Memory requirement met
+Server must have at least 4G total memory
+Total space requirement met for directory /
+Directory must have at least 10G total space
+Total space requirement met for directory /var/lib/docker
+Directory must have at least 40G total space
