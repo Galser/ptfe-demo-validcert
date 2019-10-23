@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "alvaro/bionic64"
+  config.vm.box = "galser/bionic64-for-ptfe"
   config.vm.hostname = "ptfe-dvc"
   config.vm.network "private_network", ip: "192.168.56.22"
 
