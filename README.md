@@ -19,14 +19,33 @@ To learn more about the mentioned above tools and technologies -  please check s
 - Prepare certificate -> The installer allows for using a certificate signed by a public or private CA. If you do not use a trusted certificate, your VCS provider will likely reject that certificate when sending webhooks. The key and X.509 certificate should **both be PEM (base64) encoded**.
 > Note : Never save your certificate and private key in VCS (GitHUb or any other).
 > Use any method to create certificates for appropriate name and prepare them soewhere in a sae private place, outside your VCS-controlled folders.
-For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  : 
+For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  and 1 bundle file(see below): 
     ```bash
     ls -l ~/Certs/ptfe-vagrant.guselietov.com*
-    -rw-r--r--  1 andrii  staff  1945 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.cert.pem
-    -rw-r--r--  1 andrii  staff  1676 Oct 23 13:47 /Users/.../Certs/ptfe-vagrant.guselietov.com.key.pem
+    -rw-r--r--@ 1 andrii  staff  3593 Oct 23 14:27 /Users/andrii/Certs/ptfe-vagrant.guselietov.com.bundle.pem
+    -rw-r--r--  1 andrii  staff  1945 Oct 23 13:47 /Users/andrii/Certs/ptfe-vagrant.guselietov.com.cert.pem
+    -rw-r--r--  1 andrii  staff  1676 Oct 23 13:47 /Users/andrii/Certs/ptfe-vagrant.guselietov.com.key.pem    
     ```
-    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format. Please prepare such file, you going to need it to test your installation later.
+    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format using PEM encoding. Please prepare such file, you going to need it to test your installation later.
 
+    Example of the bundle:
+    ```
+    -----BEGIN CERTIFICATE-----
+    MIIFtTCCA52gAwIBAgIIYY3HhjsBggUwDQYJKoZIhvcNAQEFBQAwRDEWMBQGA1UE
+    AwwNQUNFRElDT00gUm9vdDEMMAoGA1UECwwDUEtJMQ8wDQYDVQQKDAZFRElDT00x
+    CzAJBgNVBAYTAkVTMB4XDTA4MDQxODE2MjQyMloXDTI4MDQxMzE2MjQyMlowRDEW
+    MBQGA1UEAwwNQUNFRElDT00gUm9vdDEMMAoGA1UECwwDUEtJMQ8wDQYDVQQKDAZF
+    ....
+    -----END CERTIFICATE-----
+
+    -----BEGIN CERTIFICATE-----
+    MIIB5zCCAY6gAwIBAgIUNJADaMM+URJrPMdoIeeAs9/CEt4wCgYIKoZIzj0EAwIw
+    UjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1TYW4gRnJhbmNp
+    c2NvMR4wHAYDVQQDExVoYXNoaWNvcnAuZW5naW5lZXJpbmcwHhcNMTgwMjI4MDYx
+    ....
+    -----END CERTIFICATE-----
+    ```
+    
 - Add proper domain record (type "A") with the tools of your choice for your DNS provider pointing to IP-addres `192.168.56.22` for the host `ptfe-vagrant.guselietov.com . In this case - GoDaddy, via Web-console. Checking result :
     ```bash
     $ dig ANY ptfe-vagrant.guselietov.com
@@ -223,12 +242,10 @@ Enter the desired password, and press continue
 - Now you will see the "Preflight Checks", when all the main requirements for the PTFE installation checked and presented to you the top of the screen looks like : 
 ![Preflight checks](screenshots/3_2_prefilght_checks.png)
 Once more, press **[Continue]** button
-- The next screen presents all your settings in one place : 
-![Settings before restart](screenshots/3_3_settings.png)
+- The next screen presents all your settings in one place 
     - Check them visually, scroll down to the **Installation Type** section and select **[Demo]**
-    - Scroll to the next section : **SSL/TLS Configuration**
-After that =  press **[Save]** button at the bottom of the page
-press **[save]** button to save all you settings. And you going to be present with the following informational screen : 
+    - Scroll to the next section : **SSL/TLS Configuration** - and paste the contents of you SSL Certificate bundle here.
+    After that - press **[Save]** button at the bottom of the page to save all you settings. And you going to be present with the following informational screen : 
 ![Settings saved, restart now](screenshots/4_restat_now.png)
  Press **[Restart Now]** 
 - At his moment PTFE will do a full start of all internal services, it can take a couple of minutes, refresh the windows from time to time :
@@ -240,14 +257,29 @@ press **[save]** button to save all you settings. And you going to be present wi
 - Set up your admin user : 
     ![Setup admin user](screenshots/7_admin_setup.png)
     Fill in the form and press **[Create an account]**
-- Now you are logged in the brand fresh Private Terraform Enterprise. Congratulations.
+- Now you are logged in the brand fresh Private Terraform Enterprise. Congratulations. You can check the next section on how to test it.
 
-# Test
+# Test you installation
 
-- Create organization
-- Create workspace
-- Create token
-- Add token to config or env var
+In order to test our fresh PTFE instance we are going to create an organization. workspace within that organization, some TF code and execute that code in that workspace as in remote backend.
+
+- We need first to create an **organization** (Organizations are a shared space for teams to collaborate on workspaces in PTFE) . Login into PTFE. Choose from the dashboard "Create new organization" (also available in the top-left user menu) :
+    ![Create organization](screenshots/8_create_ORG.png)
+    For this example we are going to use **"acme"**
+- Now you are going to be prompted to **Create workspace** :
+skip **Connecting to VCS**, we don't need it for now. Enter the workspace name at the last screen : 
+![Create workspace](screenshots/8_create_ORG.png)9_create_workspace.png)
+For this example we are going to use **"playground"**
+- Next step is to create token, that will authenticate our connection. Go to the Setting menu, and select User Tokens ( https://ptfe-vagrant.guselietov.com/app/settings/tokens ) :
+  ![Create token](screenshots/10_token.png)
+  Write down the value or copy it to clipboard
+- Add the freshly generated token to Terraform CLI config (See in details here : https://www.terraform.io/docs/commands/cli-config.html#credentials )
+    - For MacOS Mojave this means adding section to the file named `.terraformrc` (note the leading period) and placed directly in the home directory of the relevant user, with content similiar to :
+    ```terraform
+    credentials "ptfe-vagrant.guselietov.com" {
+        token = "TOKEN" # <-- you token goes here in quotes
+    }    
+    ```
 - Create test TF code :
     ```terraform
     terraform {
@@ -267,15 +299,15 @@ press **[save]** button to save all you settings. And you going to be present wi
         }
     }
     ```
-- Import certificate into system ( example for MacOs ) using bundle :
+- Because we using the [Let'sEncrypt](https://letsencrypt.org/) for our installation the Go language (in which Terraform CLI written) as of moment of writing this instruction does not trust this CA. So, we need to import CA information into system ( consider you operation system manual), example for macOS Mojave using bundle :
     - run 'Keychain Access" application
     - switch to the keychain **"System"**
     - drag-and-drop your certificate bundle (system can ask you tp confirm your account password) : 
     Check how this can look at teh screenshot : 
     ![Installed cert](screenshots/macos_mojave_cert_install.png)
-    - now - open the imported certificate in System keychain. 
+    - now - open the imported certificate in *System keychain*. 
     - Open **Trust** drop-down section
-    - Ensure taht nexst to the "When using this certificate" you have selected from menu **"Always Trust"**
+    - Ensure that next to the "When using this certificate" you have selected from menu **"Always Trust"**
       See attached screenshot :  ![Cert settings](screenshots/macos_mojave_cert_settings.png)
 
 - Init backend
@@ -314,6 +346,17 @@ press **[save]** button to save all you settings. And you going to be present wi
     > Note : Successfully configured the backend "remote"! Terraform will automatically
     >        use this backend unless the backend configuration changes
     > E.g. we using our new PTFE installation now
+
+    Without the adding certificate bundle for Let'sEncrypt you could have error like this :
+    ```zsh
+    Initializing the backend...
+
+    Error: Failed to request discovery document: Get https://ptfe-vagrant.guselietov.com/.well-known/terraform.json: x509: certificate signed by unknown authority
+
+    on main.tf line 4, in terraform:
+    4:     hostname     = "ptfe-vagrant.guselietov.com"
+   ```
+
 - Apply code : 
     ```
     Running apply in the remote backend. Output will stream here. Pressing Ctrl-C
@@ -371,12 +414,12 @@ press **[save]** button to save all you settings. And you going to be present wi
     On the screenshot below you can see the satte both in WebUI (at the e;lft) and CLI (at teh right side) : 
     ![TF apply](screenshots/ptfe_apply_remoet_web_and_cli.png)
 - Now you can destroy the virtual machine and free up resources by executing : 
-```
-$ vagrant destroy
-    default: Are you sure you want to destroy the 'default' VM? [y/N] y
-==> default: Forcing shutdown of VM...
-==> default: Destroying VM and associated drives...
-```
+    ```zsh
+    $ vagrant destroy
+        default: Are you sure you want to destroy the 'default' VM? [y/N] y
+    ==> default: Forcing shutdown of VM...
+    ==> default: Destroying VM and associated drives...
+    ```
 and confirming by pressing `y`
 
 
@@ -393,7 +436,6 @@ and confirming by pressing `y`
 
 
 # TODO
-- [ ] update README for CERT bundle part
 
 # DONE
 - [x] export GoDaddy keys/challenge responce
@@ -402,3 +444,4 @@ and confirming by pressing `y`
 - [x] update readme
 - [x] prepare vagrant vm
 - [x] prepare step-by step instructions for installation part
+- [x] update README for CERT bundle part
