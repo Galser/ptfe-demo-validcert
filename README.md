@@ -2,13 +2,13 @@
 Install PTFE on Demo version with Valid Certificate - vagrant
 
 # Purpose
-Install PTFE on Demo version with Valid Certificate in Vagrantr environment, this repos contins the aprropiate Vagrantfile with instructions.
+Install PTFE on Demo version with Valid Certificate in Vagrantr environment, this repo contains the appropriate Vagrantfile with instructions.
 
 # Requirements
 
-TFE Overview : https://www.terraform.io/docs/enterprise/index.html
+TFE Overview: https://www.terraform.io/docs/enterprise/index.html
 
-Pre-Install checklist : https://www.terraform.io/docs/enterprise/before-installing/index.html
+Pre-Install checklist: https://www.terraform.io/docs/enterprise/before-installing/index.html
 
 This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use Vagrant with VirtualBox.
 
@@ -17,16 +17,16 @@ To learn more about the mentioned above tools and technologies -  please check s
 # How-to
 
 - Prepare certificate -> The installer allows for using a certificate signed by a public or private CA. If you do not use a trusted certificate, your VCS provider will likely reject that certificate when sending webhooks. The key and X.509 certificate should **both be PEM (base64) encoded**.
-> Note : Never save your certificate and private key in VCS (GitHUb or any other).
-> Use any method to create certificates for appropriate name and prepare them soewhere in a sae private place, outside your VCS-controlled folders.
-For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  and 1 bundle file(see below): 
+> Note: Never save your certificate and private key in VCS (GitHUb or any other).
+
+- Use any method to create certificates for appropriate name and prepare them somewhere in a safe private place, outside your VCS-controlled folders. For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  and 1 bundle file(see below): 
     ```bash
     ls -l ~/Certs/ptfe-vagrant.guselietov.com*
     -rw-r--r--@ 1 andrii  staff  3593 Oct 23 14:27 /Users/andrii/Certs/ptfe-vagrant.guselietov.com.bundle.pem
     -rw-r--r--  1 andrii  staff  1945 Oct 23 13:47 /Users/andrii/Certs/ptfe-vagrant.guselietov.com.cert.pem
     -rw-r--r--  1 andrii  staff  1676 Oct 23 13:47 /Users/andrii/Certs/ptfe-vagrant.guselietov.com.key.pem    
     ```
-    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format using PEM encoding. Please prepare such file, you going to need it to test your installation later.
+    > Note 2, if you are using private CA (Certificate Authority ) then you also need to prepare CA Bundle. Terraform Enterprise needs to be able to access all services that it integrates with, such as VCS providers or database servers. Because it typically accesses them via SSL/TLS, it is critical that the certificates used by any service that Terraform Enterprise integrates with are trusted by Terraform Enterprise. A collection of certificates for trusted issuers is known as a Certificate Authority (CA) Bundle. All certificates in the certificate signing chain, meaning the root certificate and any intermediate certificates, must be included here. These multiple certificates are listed one after another in text format using PEM encoding. Please prepare such a file, you going to need it to test your installation later.
 
     Example of the bundle:
     ```
@@ -46,7 +46,7 @@ For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  and 1 
     -----END CERTIFICATE-----
     ```
     
-- Add proper domain record (type "A") with the tools of your choice for your DNS provider pointing to IP-addres `192.168.56.22` for the host `ptfe-vagrant.guselietov.com . In this case - GoDaddy, via Web-console. Checking result :
+- Add proper domain record (type "A") with the tools of your choice for your DNS provider pointing to IP-address `192.168.56.22` for the host `ptfe-vagrant.guselietov.com . In this case - GoDaddy, via Web-console. Checking result :
     ```bash
     $ dig ANY ptfe-vagrant.guselietov.com
 
@@ -59,10 +59,10 @@ For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  and 1 
     ;; OPT PSEUDOSECTION:
     ; EDNS: version: 0, flags:; udp: 4096
     ;; QUESTION SECTION:
-    ;ptfe-vagrant.guselietov.com.	IN	ANY
+    ;ptfe-vagrant.guselietov.com.    IN    ANY
 
     ;; ANSWER SECTION:
-    ptfe-vagrant.guselietov.com. 3600 IN	A	192.168.56.22
+    ptfe-vagrant.guselietov.com. 3600 IN    A    192.168.56.22
 
     ;; Query time: 22 msec
     ;; SERVER: 192.168.2.254#53(192.168.2.254)
@@ -85,7 +85,7 @@ git clone https://github.com/Galser/ptfe-demo-validcert.git
     ``` 
     > Command above will utilize settings from [Vagrantfile](Vagrantfile) prepared in this repo
  
-    First-time start can take some time, as Vagrant need to download and import box image, and you can see something like this :
+    The first-time start can take some time, as Vagrant need to download and import box image, and you can see something like this :
     ```bash
     Bringing machine 'default' up with 'virtualbox' provider...
     ==> default: Box 'galser/bionic64-for-ptfe' could not be found. Attempting to find and install...
@@ -162,11 +162,11 @@ git clone https://github.com/Galser/ptfe-demo-validcert.git
     Determining local address
     The installer was unable to automatically detect the private IP address of this machine.
     Please choose one of the following network interfaces:
-    [0] enp0s3	10.0.2.15
-    [1] enp0s8	192.168.56.22
-    [2] docker0	172.17.0.1    
+    [0] enp0s3    10.0.2.15
+    [1] enp0s8    192.168.56.22
+    [2] docker0    172.17.0.1    
     ```
-    At the screen above, installer is not able to correctly choose private IP address, you need to choose. For our example the correct one is number [1]
+    At the screen above, the installer is not able to correctly choose a private IP address, you need to choose. For our example, the correct one is number [1]
 - Proceed with it :
     ```bash
     Enter desired number (0-1): 1
@@ -220,7 +220,7 @@ git clone https://github.com/Galser/ptfe-demo-validcert.git
 - Open your favorite browser and access the link that had been presented to you at the previous step : [Web-stage of PTFE installation](http://192.168.56.22:8800). You going to see the page :
 ![Bypass TSL warning](screenshots/0_bypass_tls_warning.png)
 Press **[Continue to Setup]**
-- As we using self-signed certificates for this part of the installation , you will see a security warning when first connecting. **This is expected and you'll need to proceed with the connection anyway.** And later we are going to change that address to a proper FQDN form and real certificate
+- As we using self-signed certificates for this part of the installation, you will see a security warning when first connecting. **This is expected and you'll need to proceed with the connection anyway.** And later we are going to change that address to a proper FQDN form and real certificate
 - Now you will be presented with settings screen :
 ![Installation certificate request](screenshots/1_install_cert_question.jpg)
     Where you will need to 
@@ -231,9 +231,9 @@ Press **[Continue to Setup]**
     ![Enter cert data](screenshots/1_1_fill_cert_data.png)
 - Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press [Choose license] , Locate the file and upload. 
 ![Add license form](screenshots/2_add_license.png)
-    > And you can also see - that the you've been automatically redirected to the new url : `https://ptfe-vagrant.guselietov.com:8800/`
+    > And you can also see - that you've been automatically redirected to the new URL: `https://ptfe-vagrant.guselietov.com:8800/`
     > and that the "lock" icon next to the FQDN of the site in the URL bar is closed, meaning that certificate recognized as valid by the browser and corresponds to the address of the site.
-- Next screen allows you to select between *Online* and *airgapped* installation. Choose **[Online]** :
+- The next screen allows you to select between *Online* and *air-gapped* installation. Choose **[Online]** :
 ![Choose install type](screenshots/3_choose_install_type.png)
 And press **[Continue]** button
 - On the next step, you will need to enter the password, that can be used in the future to access THIS, Admin Console : 
@@ -244,8 +244,8 @@ Enter the desired password, and press continue
 Once more, press **[Continue]** button
 - The next screen presents all your settings in one place 
     - Check them visually, scroll down to the **Installation Type** section and select **[Demo]**
-    - Scroll to the next section : **SSL/TLS Configuration** - and paste the contents of you SSL Certificate bundle here.
-    After that - press **[Save]** button at the bottom of the page to save all you settings. And you going to be present with the following informational screen : 
+    - Scroll to the next section: **SSL/TLS Configuration** - and paste the contents of your SSL Certificate bundle here.
+    After that - press **[Save]** button at the bottom of the page to save all your settings. And you going to be present with the following informational screen : 
 ![Settings saved, restart now](screenshots/4_restat_now.png)
  Press **[Restart Now]** 
 - At his moment PTFE will do a full start of all internal services, it can take a couple of minutes, refresh the windows from time to time :
@@ -259,27 +259,33 @@ Once more, press **[Continue]** button
     Fill in the form and press **[Create an account]**
 - Now you are logged in the brand fresh Private Terraform Enterprise. Congratulations. You can check the next section on how to test it.
 
-# Test you installation
+# Test your installation
 
-In order to test our fresh PTFE instance we are going to create an organization. workspace within that organization, some TF code and execute that code in that workspace as in remote backend.
+In order to test our fresh PTFE instance, we are going to create an organization. workspace within that organization, some TF code and execute that code in that workspace as in remote backend.
 
 - We need first to create an **organization** (Organizations are a shared space for teams to collaborate on workspaces in PTFE) . Login into PTFE. Choose from the dashboard "Create new organization" (also available in the top-left user menu) :
+
     ![Create organization](screenshots/8_create_ORG.png)
-    For this example we are going to use **"acme"**
+    
+    For this example, we are going to use **"acme"**
+    
 - Now you are going to be prompted to **Create workspace** :
 skip **Connecting to VCS**, we don't need it for now. Enter the workspace name at the last screen : 
-![Create workspace](screenshots/8_create_ORG.png)9_create_workspace.png)
-For this example we are going to use **"playground"**
-- Next step is to create token, that will authenticate our connection. Go to the Setting menu, and select User Tokens ( https://ptfe-vagrant.guselietov.com/app/settings/tokens ) :
+
+    ![Create workspace](screenshots/9_create_workspace.png)
+
+    For this example, we are going to use **"playground"**
+
+- The next step is to create a token, that will authenticate our connection. Go to the Setting menu, and select User Tokens ( https://ptfe-vagrant.guselietov.com/app/settings/tokens ) :
   ![Create token](screenshots/10_token.png)
   Write down the value or copy it to clipboard
-- Add the freshly generated token to Terraform CLI config (See in details here : https://www.terraform.io/docs/commands/cli-config.html#credentials )
-    - For MacOS Mojave this means adding section to the file named `.terraformrc` (note the leading period) and placed directly in the home directory of the relevant user, with content similiar to :
-    ```terraform
-    credentials "ptfe-vagrant.guselietov.com" {
-        token = "TOKEN" # <-- you token goes here in quotes
-    }    
-    ```
+- Add the freshly generated token to Terraform CLI config (See in details here: https://www.terraform.io/docs/commands/cli-config.html#credentials )
+    - For MacOS Mojave this means adding a section to the file named `.terraformrc` (note the leading period) and placed directly in the home directory of the relevant user, with content similar to :
+      ```terraform
+      credentials "ptfe-vagrant.guselietov.com" {
+          token = "TOKEN" # <-- you token goes here in quotes
+      }    
+      ```
 - Create test TF code :
     ```terraform
     terraform {
@@ -288,7 +294,7 @@ For this example we are going to use **"playground"**
             organization = "acme"
 
             workspaces {
-            name = "playground"
+              name = "playground"
             }
         }
     }
@@ -299,15 +305,15 @@ For this example we are going to use **"playground"**
         }
     }
     ```
-- Because we using the [Let'sEncrypt](https://letsencrypt.org/) for our installation the Go language (in which Terraform CLI written) as of moment of writing this instruction does not trust this CA. So, we need to import CA information into system ( consider you operation system manual), example for macOS Mojave using bundle :
+- Because we use the [Let'sEncrypt](https://letsencrypt.org/) for our installation the Go language (in which Terraform CLI wrote) as of the moment of writing this instruction does not trust this CA. So, we need to import CA information into system ( consider you operation system manual), example for macOS Mojave using bundle :
     - run 'Keychain Access" application
     - switch to the keychain **"System"**
-    - drag-and-drop your certificate bundle (system can ask you tp confirm your account password) : 
-    Check how this can look at teh screenshot : 
+    - drag-and-drop your certificate bundle (the system can ask you to confirm your account password) : 
+    Check how this can look at the screenshot : 
     ![Installed cert](screenshots/macos_mojave_cert_install.png)
     - now - open the imported certificate in *System keychain*. 
     - Open **Trust** drop-down section
-    - Ensure that next to the "When using this certificate" you have selected from menu **"Always Trust"**
+    - Ensure that next to the "When using this certificate" you have selected from the menu **"Always Trust"**
       See attached screenshot :  ![Cert settings](screenshots/macos_mojave_cert_settings.png)
 
 - Init backend
@@ -343,9 +349,9 @@ For this example we are going to use **"playground"**
     rerun this command to reinitialize your working directory. If you forget, other
     commands will detect it and remind you to do so if necessary.
     ```
-    > Note : Successfully configured the backend "remote"! Terraform will automatically
+    > Note: Successfully configured the backend "remote"! Terraform will automatically
     >        use this backend unless the backend configuration changes
-    > E.g. we using our new PTFE installation now
+    > E.g. we are using our new PTFE installation now
 
     Without the adding certificate bundle for Let'sEncrypt you could have error like this :
     ```zsh
@@ -354,7 +360,7 @@ For this example we are going to use **"playground"**
     Error: Failed to request discovery document: Get https://ptfe-vagrant.guselietov.com/.well-known/terraform.json: x509: certificate signed by unknown authority
 
     on main.tf line 4, in terraform:
-    4:     hostname     = "ptfe-vagrant.guselietov.com"
+      4:     hostname     = "ptfe-vagrant.guselietov.com"
    ```
 
 - Apply code : 
@@ -411,7 +417,7 @@ For this example we are going to use **"playground"**
     Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
     ```
     E.g. our fresh PTFE installation with valid SSL certificate works as expected. 
-    On the screenshot below you can see the satte both in WebUI (at the e;lft) and CLI (at teh right side) : 
+    On the screenshot below you can see the state both in WebUI (at the left) and CLI (at the right side) : 
     ![TF apply](screenshots/ptfe_apply_remoet_web_and_cli.png)
 - Now you can destroy the virtual machine and free up resources by executing : 
     ```zsh
@@ -420,7 +426,7 @@ For this example we are going to use **"playground"**
     ==> default: Forcing shutdown of VM...
     ==> default: Destroying VM and associated drives...
     ```
-and confirming by pressing `y`
+and confirm by pressing `y`
 
 
 
@@ -431,8 +437,8 @@ and confirming by pressing `y`
 2. **For managing infrastructure** we using Terraform - open-source infrastructure as a code software tool created by HashiCorp. It enables users to define and provision a data center infrastructure using a high-level configuration language known as Hashicorp Configuration Language, or optionally JSON. More you encouraged to [learn here](https://www.terraform.io). 
 3. **This project for virtualization** uses **AWS EC2** - Amazon Elastic Compute Cloud (Amazon EC2 for short) - a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. You can read in details and create a free try-out account if you don't have one here :  [Amazon EC2 main page](https://aws.amazon.com/ec2/) 
 4. **Nginx stands apart - as it will be downloaded and installed automatically during the provision.** Nginx is an open source HTTP Web server and reverse proxy server.In addition to offering HTTP server capabilities, Nginx can also operate as an IMAP/POP3 mail proxy server as well as function as a load balancer and HTTP cache server. You can get more information about it  - check [official website here](https://www.nginx.com)  
-5. **GoDaddy** - GoDaddy Inc. is an American publicly traded Internet domain registrar and web hosting company, headquartered in Scottsdale, Arizona, and incorporated in Delaware. More information here : https://www.godaddy.com/
-6. **Let'sEncrypt** - Let's Encrypt is a non-profit certificate authority run by Internet Security Research Group that provides X.509 certificates for Transport Layer Security encryption at no charge. The certificate is valid for 90 days, during which renewal can take place at any time. You cna find out more on their [official page](https://letsencrypt.org/)
+5. **GoDaddy** - GoDaddy Inc. is an American publicly traded Internet domain registrar and web hosting company, headquartered in Scottsdale, Arizona, and incorporated in Delaware. More information here: https://www.godaddy.com/
+6. **Let'sEncrypt** - Let's Encrypt is a non-profit certificate authority run by Internet Security Research Group that provides X.509 certificates for Transport Layer Security encryption at no charge. The certificate is valid for 90 days, during which renewal can take place at any time. You can find out more on their [official page](https://letsencrypt.org/)
 
 
 # TODO
