@@ -2,7 +2,7 @@
 Install PTFE on Demo version with Valid Certificate - vagrant
 
 # Purpose
-Install PTFE on Demo version with Valid Certificate in Vagrantr environment, this repo contains the appropriate Vagrantfile with instructions.
+This repo contains all the code and instruction on how to install PTFE on Demo version with Valid Certificate in Vagrant environment.
 
 # Requirements
 
@@ -14,9 +14,11 @@ This repository assumes general knowledge about Terraform, if not, please get yo
 
 To learn more about the mentioned above tools and technologies -  please check section [Technologies near the end of the README](#technologies)
 
+You also will need to prepare valid SSL certificate.
+
 # How-to
 
-- Prepare certificate -> The installer allows for using a certificate signed by a public or private CA. If you do not use a trusted certificate, your VCS provider will likely reject that certificate when sending webhooks. The key and X.509 certificate should **both be PEM (base64) encoded**.
+- Prepare certificate -> The installer allows for using a certificate signed by a public or private CA. If you do not use a trusted certificate, your VCS provider will likely reject that certificate when sending webhooks. The key and X.509 certificate should **both be PEM (base64) encoded**. 
 > Note: Never save your certificate and private key in VCS (GitHUb or any other).
 
 - Use any method to create certificates for appropriate name and prepare them somewhere in a safe private place, outside your VCS-controlled folders. For this repo we have 2 files for the FQDN `ptfe-vagrant.guselietov.com`  and 1 bundle file(see below): 
@@ -217,7 +219,7 @@ git clone https://github.com/Galser/ptfe-demo-validcert.git
     http://192.168.56.22:8800
     ```
 ## Web-based portion of the installation
-- Open your favorite browser and access the link that had been presented to you at the previous step : [Web-stage of PTFE installation](http://192.168.56.22:8800). You going to see the page :
+- Open your favorite browser and access the link that had been presented to you at the previous step : [Web-stage of PTFE installation](http://192.168.56.22:8800). You are going to see the page :
 ![Bypass TSL warning](screenshots/0_bypass_tls_warning.png)
 Press **[Continue to Setup]**
 - As we using self-signed certificates for this part of the installation, you will see a security warning when first connecting. **This is expected and you'll need to proceed with the connection anyway.** And later we are going to change that address to a proper FQDN form and real certificate
@@ -229,7 +231,7 @@ Press **[Continue to Setup]**
     - Choose File for Certificate
     - and press green button **[Upload & Continue]**
     ![Enter cert data](screenshots/1_1_fill_cert_data.png)
-- Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press [Choose license] , Locate the file and upload. 
+- Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press **[Choose license]** , Locate the file and upload. 
 ![Add license form](screenshots/2_add_license.png)
     > And you can also see - that you've been automatically redirected to the new URL: `https://ptfe-vagrant.guselietov.com:8800/`
     > and that the "lock" icon next to the FQDN of the site in the URL bar is closed, meaning that certificate recognized as valid by the browser and corresponds to the address of the site.
@@ -252,7 +254,9 @@ Once more, press **[Continue]** button
 ![Starting dashboard](screenshots/5_starting.png)
   > Note:..Depending on your browser and/or browser settings the starting in the left part of Dashboard - never changes unless you reload the page. So force-reload the page after 2-3 minutes. 
 - Wait a couple of minutes for the state at the left rectangle to be changed to **Started**. Now, below the button [Stop now] there is link **[Open]** :
+
     ![Started](screenshots/6_started.png)
+    
     Open it, this will lead you to the first-time setup of the admin user :
 - Set up your admin user : 
     ![Setup admin user](screenshots/7_admin_setup.png)
@@ -276,17 +280,18 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 
     For this example, we are going to use **"playground"**
 
-- The next step is to create a token, that will authenticate our connection. Go to the Setting menu, and select User Tokens ( https://ptfe-vagrant.guselietov.com/app/settings/tokens ) :
+- The next step is to create a token, that will authenticate our connection. Go to the **Settings menu**, and select User Tokens ( https://ptfe-vagrant.guselietov.com/app/settings/tokens ) :
   ![Create token](screenshots/10_token.png)
+  Fill the description and press button **[Generate token]**
   Write down the value or copy it to clipboard
 - Add the freshly generated token to Terraform CLI config (See in details here: https://www.terraform.io/docs/commands/cli-config.html#credentials )
-    - For MacOS Mojave this means adding a section to the file named `.terraformrc` (note the leading period) and placed directly in the home directory of the relevant user, with content similar to :
+    - For *MacOS Mojave* this means adding a section to the file named `.terraformrc` (note the leading period) and placed directly in the home directory of the relevant user, with content similar to :
       ```terraform
       credentials "ptfe-vagrant.guselietov.com" {
           token = "TOKEN" # <-- you token goes here in quotes
       }    
       ```
-- Create test TF code :
+- Create test TF code (for example in file [main.tf][main.tf) ):
     ```terraform
     terraform {
         backend "remote" {
@@ -306,7 +311,7 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
     }
     ```
     > Note the usage of hostname, our freshly created organization and workspace names
-- Because we use the [Let'sEncrypt](https://letsencrypt.org/) for our installation the Go language (in which Terraform CLI wrote) as of the moment of writing this instruction does not trust this CA. So, we need to import CA information into system ( consider you operation system manual), example for macOS Mojave using bundle :
+- Because we use the [Let'sEncrypt](https://letsencrypt.org/) for our installation the Go language (in which Terraform CLI had been written) as of the moment of writing this instruction does not trust this CA. So, we need to import CA information into system ( consider you operation system manual), example for macOS Mojave using bundle :
     - run 'Keychain Access" application
     - switch to the keychain **"System"**
     - drag-and-drop your certificate bundle (the system can ask you to confirm your account password) : 
@@ -317,7 +322,7 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
     - Ensure that next to the "When using this certificate" you have selected from the menu **"Always Trust"**
       See attached screenshot :  ![Cert settings](screenshots/macos_mojave_cert_settings.png)
 
-- Init backend
+- Init backend by executing :
     ```bash
     terraform init
 
