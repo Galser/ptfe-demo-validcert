@@ -305,6 +305,7 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
         }
     }
     ```
+    > Note the usage of hostname, our freshly created organization and workspace names
 - Because we use the [Let'sEncrypt](https://letsencrypt.org/) for our installation the Go language (in which Terraform CLI wrote) as of the moment of writing this instruction does not trust this CA. So, we need to import CA information into system ( consider you operation system manual), example for macOS Mojave using bundle :
     - run 'Keychain Access" application
     - switch to the keychain **"System"**
@@ -363,8 +364,12 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
       4:     hostname     = "ptfe-vagrant.guselietov.com"
    ```
 
-- Apply code : 
+- Apply code by executing :
+    ```zsh
+    terraform apply
     ```
+    Output :
+    ```zsh
     Running apply in the remote backend. Output will stream here. Pressing Ctrl-C
     will cancel the remote apply if it's still pending. If the apply started it
     will stop streaming the logs, but will not stop the apply running remotely.
@@ -419,7 +424,7 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
     E.g. our fresh PTFE installation with valid SSL certificate works as expected. 
     On the screenshot below you can see the state both in WebUI (at the left) and CLI (at the right side) : 
     ![TF apply](screenshots/ptfe_apply_remoet_web_and_cli.png)
-- Now you can destroy the virtual machine and free up resources by executing : 
+- After experimenting you can destroy the virtual machine and free up resources by executing : 
     ```zsh
     $ vagrant destroy
         default: Are you sure you want to destroy the 'default' VM? [y/N] y
